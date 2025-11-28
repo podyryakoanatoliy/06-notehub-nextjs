@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
-import { BallTriangle } from "react-loader-spinner";
-import Alert from "@mui/material/Alert";
+// import { BallTriangle } from "react-loader-spinner";
+// import Alert from "@mui/material/Alert";
 import css from "./NotesPage.module.css";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
@@ -24,10 +24,10 @@ export default function NotesClient() {
     },
     1000
   );
-  const { data, isFetching, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["notes", query, page],
     queryFn: () => fetchNotes(query, page),
-
+    placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
   console.log(data);
@@ -53,30 +53,7 @@ export default function NotesClient() {
           </Modal>
         )}
       </header>
-      {isFetching ? (
-        <div className={css.loaderInPlace}>
-          <BallTriangle
-            height={400}
-            width={400}
-            radius={4}
-            color="#ec0000ff"
-            ariaLabel="ball-triangle-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      ) : isError ? (
-        <Alert variant="filled" severity="error">
-          Вибач, сталася помилка.
-        </Alert>
-      ) : !data || data.notes.length === 0 ? (
-        <Alert variant="filled" severity="warning">
-          Не бачу такої нотатки.
-        </Alert>
-      ) : (
-        <NoteList notes={data.notes} />
-      )}
+      {data !== undefined && <NoteList notes={data.notes} />}
     </div>
   );
 }

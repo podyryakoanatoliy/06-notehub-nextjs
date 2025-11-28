@@ -14,13 +14,13 @@ interface FormValues {
   tag: string;
 }
 
-axios.defaults.baseURL = "https://next-v1-notes-api.goit.study";
-
+axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const fetchNotes = async (
   query: string,
   page: number
 ): Promise<NoteListResponse> => {
-  const option = {
+  const options = {
     headers: {
       accept: "application/json",
       Authorization: `Bearer ${myKey}`,
@@ -31,12 +31,13 @@ export const fetchNotes = async (
       perPage: 12,
     },
   };
-  const { data } = await axios.get<NoteListResponse>("/notes", option);
+  // await delay(2000);
+  const { data } = await axios.get<NoteListResponse>("/notes", options);
   return data;
 };
 
 export const createNote = async (newNote: FormValues): Promise<Note> => {
-  const option = {
+  const options = {
     headers: {
       accept: "application/json",
       "Content-Type": "application/json",
@@ -46,19 +47,31 @@ export const createNote = async (newNote: FormValues): Promise<Note> => {
   };
   console.log("newnote", newNote);
 
-  const { data } = await axios.post<Note>(`/notes`, newNote, option);
+  const { data } = await axios.post<Note>(`/notes`, newNote, options);
   console.log("object", data);
   return data;
 };
 
 export const deleteNote = async (id: string): Promise<Note> => {
-  const option = {
+  const options = {
     headers: {
       accept: "application/json",
       "Content-Type": "application/json",
       Authorization: `Bearer ${myKey}`,
     },
   };
-  const { data } = await axios.delete<Note>(`/notes/${id}`, option);
+  const { data } = await axios.delete<Note>(`/notes/${id}`, options);
+  return data;
+};
+
+export const fetchNoteById = async (id: string) => {
+  const options = {
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${myKey}`,
+    },
+  };
+  const { data } = await axios.get<Note>(`/notes/${id}`, options);
   return data;
 };
