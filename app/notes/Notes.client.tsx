@@ -24,7 +24,7 @@ export default function NotesClient() {
     },
     1000
   );
-  const { data } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["notes", query, page],
     queryFn: () => fetchNotes(query, page),
     placeholderData: keepPreviousData,
@@ -32,6 +32,9 @@ export default function NotesClient() {
   });
   console.log(data);
   const handleCloseModal = () => setOpenModal(!openModal);
+  if (isLoading) return <p>Loading...</p>;
+
+  if (error || !data) return <p>Some error..</p>;
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
