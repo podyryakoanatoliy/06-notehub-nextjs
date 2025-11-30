@@ -8,11 +8,11 @@ import { fetchNotes } from "@/lib/api";
 import NotesClient from "./Notes.client";
 
 type Props = {
-  params: Promise<{ query: string; id: string }>;
+  params: { query: string; id: string };
 };
 
 const Notes = async ({ params }: Props) => {
-  const { query, id } = await params;
+  const { query, id } = params;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["notes", query, id],

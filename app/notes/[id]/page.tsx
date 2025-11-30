@@ -15,11 +15,10 @@ const NoteDetail = async ({ params }: Props) => {
 
   const queryClient = new QueryClient();
   queryClient.prefetchQuery({
-    queryKey: ["notes", id],
+    queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
   });
-  const note = await fetchNoteById(id);
-  console.log(note);
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <NoteDetailsClient />
